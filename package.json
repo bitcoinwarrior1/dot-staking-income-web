@@ -1,0 +1,27 @@
+{
+  "name": "dot-staking-income-web",
+  "version": "1.0.0",
+  "description": "web interface for dot staking income",
+  "main": "index.js",
+  "scripts": {
+    "watch": "watchify index.js -o bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/James-Sangalli/dot-staking-income-web.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/James-Sangalli/dot-staking-income-web/issues"
+  },
+  "homepage": "https://github.com/James-Sangalli/dot-staking-income-web#readme",
+  "devDependencies": {
+    "watchify": "^4.0.0"
+  },
+  "dependencies": {
+    "downloadjs": "^1.4.7",
+    "json2csv": "^5.0.6",
+    "superagent": "^6.1.0"
+  }
+}
