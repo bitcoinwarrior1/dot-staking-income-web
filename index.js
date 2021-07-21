@@ -2,7 +2,7 @@ const request = require("superagent");
 const { Parser } = require('json2csv');
 const { download } = require("downloadjs");
 const parser = new Parser();
-const url = "https://";
+const url = "https://dot-staking-income.herokuapp.com/";
 
 document.addEventListener("DOMContentLoaded", () => {
 
