@@ -1,18 +1,20 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 const request = require("superagent");
 const { Parser } = require('json2csv');
-const { download } = require("downloadjs");
+const download = require("downloadjs");
 const parser = new Parser();
-const url = "https://";
+const url = "https://dot-staking-income.herokuapp.com/";
 
 document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("downloadButton").addEventListener("click", () => {
         const query = getQuery();
-        request.get(query, (err, result) => {
+        request.get(query.url, (err, result) => {
             if(err) throw err;
-            const csv = parser.parse(result);
-            download(csv, "staking-income.csv", "text/plain");
+            let stakingHistory = result.data.history;
+            stakingHistory.push({ total_value_usd: result.data.total_value_usd });
+            const csv = parser.parse(stakingHistory);
+            download(csv, `staking-income-${query.network}.csv`, "text/plain");
         });
     });
 
@@ -20,9 +22,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const userAddress = document.getElementById("address").value;
         const isKSM = document.getElementById("DOT").checked;
         if(isKSM) {
-           return `${url}/${userAddress}/polkadot`;
+           return {
+               network: "KSM",
+               url: `${url}/${userAddress}/kusama`
+           }
         } else {
-            return `${url}/${userAddress}/kusama`;
+            return {
+                network: "DOT",
+                url: `${url}/${userAddress}/polkadot`
+            }
         }
     }
 

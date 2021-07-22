@@ -1,6 +1,6 @@
 const request = require("superagent");
 const { Parser } = require('json2csv');
-const { download } = require("downloadjs");
+const download = require("downloadjs");
 const parser = new Parser();
 const url = "https://dot-staking-income.herokuapp.com/";
 
@@ -8,10 +8,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("downloadButton").addEventListener("click", () => {
         const query = getQuery();
-        request.get(query, (err, result) => {
+        request.get(query.url, (err, result) => {
             if(err) throw err;
-            const csv = parser.parse(result);
-            download(csv, "staking-income.csv", "text/plain");
+            let stakingHistory = result.data.history;
+            stakingHistory.push({ total_value_usd: result.data.total_value_usd });
+            const csv = parser.parse(stakingHistory);
+            download(csv, `staking-income-${query.network}.csv`, "text/plain");
         });
     });
 
@@ -19,9 +21,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const userAddress = document.getElementById("address").value;
         const isKSM = document.getElementById("DOT").checked;
         if(isKSM) {
-           return `${url}/${userAddress}/polkadot`;
+           return {
+               network: "KSM",
+               url: `${url}/${userAddress}/kusama`
+           }
         } else {
-            return `${url}/${userAddress}/kusama`;
+            return {
+                network: "DOT",
+                url: `${url}/${userAddress}/polkadot`
+            }
         }
     }
 
