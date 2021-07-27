@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 throw err;
             } else {
                 try {
-                    let stakingHistory = result.body.list;
+                    let stakingHistory = addDates(result.body.list);
                     stakingHistory.push({ total_value_usd: result.body.total_value_usd });
                     const csv = parser.parse(stakingHistory);
                     download(csv, `staking-income-${query.network}-${query.address}.csv`, "text/plain");
@@ -27,6 +27,13 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+
+    function addDates(list) {
+        for(const i in list) {
+            list[i].date = new Date(list[i].block_timestamp * 1000).toDateString();
+        }
+        return list;
+    }
 
     function getQuery() {
         const userAddress = document.getElementById("address").value;
