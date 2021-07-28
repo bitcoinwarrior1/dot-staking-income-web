@@ -16,9 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 throw err;
             } else {
                 try {
-                    const stakingHistory = result.body.list;
-                    stakingHistory.push({ total_value_usd: result.body.total_value_usd });
-                    const csv = parser.parse(stakingHistory);
+                    const activity = addTotalValue(result, query.network);
+                    const csv = parser.parse(activity);
                     download(csv, `staking-income-${query.network}-${query.address}.csv`, "text/plain");
                     document.getElementById("status").hidden = true;
                 } catch (e) {
@@ -27,6 +26,18 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+
+    function addTotalValue(result, network) {
+        const activity = result.body.list;
+        activity.push({ total_value_usd: result.body.total_value_usd });
+        if(network === "DOT") {
+            activity.push({ total_value_DOT : result.body.total_value_DOT });
+        } else {
+            activity.push({ total_value_KSM : result.body.total_value_KSM });
+        }
+
+        return activity;
+    }
 
     function getQuery() {
         const userAddress = document.getElementById("address").value;
