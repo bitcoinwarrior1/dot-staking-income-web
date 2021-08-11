@@ -15,9 +15,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 throw err;
             } else {
                 try {
-                    const activity = addTotalValue(result, query.network);
+                    const activity = addTotalValue(result, query.network, query.currency);
                     const csv = parser.parse(activity);
-                    download(csv, `staking-income-${query.network}-${query.address}.csv`, "text/plain");
+                    download(csv, `staking-income-${query.network}-${query.address}-${query.currency}.csv`, "text/plain");
                     document.getElementById("status").hidden = true;
                 } catch (e) {
                     document.getElementById("status").innerText = "no staking found on this address";
@@ -26,9 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    function addTotalValue(result, network) {
+    function addTotalValue(result, network, currency) {
         const activity = result.body.list;
-        activity.push({ total_value_usd: result.body.total_value_usd });
+        const title = `total_value_${currency}`;
+        activity.push({ [title]: result.body[title] });
         if(network === "DOT") {
             activity.push({ total_value_DOT : result.body.total_value_DOT });
         } else {
@@ -41,17 +42,21 @@ document.addEventListener("DOMContentLoaded", () => {
     function getQuery() {
         const userAddress = document.getElementById("address").value;
         const isKSM = document.getElementById("KSM").checked;
+        const currencyElement = document.getElementById("currency");
+        const currency = currencyElement.options[currencyElement.selectedIndex].text.toLowerCase();
         if(isKSM) {
            return {
                network: "KSM",
                address: userAddress,
-               url: `${url}/${userAddress}/KSM`
+               currency: currency,
+               url: `${url}/${userAddress}/KSM/${currency}`
            }
         } else {
             return {
                 network: "DOT",
                 address: userAddress,
-                url: `${url}/${userAddress}/DOT`
+                currency: currency,
+                url: `${url}/${userAddress}/DOT/${currency}`
             }
         }
     }
