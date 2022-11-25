@@ -7,9 +7,10 @@ const url = "https://dot-staking-income.herokuapp.com/history";
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    document.getElementById("downloadButton").addEventListener("click", () => {
+    function downloadEventListener() {
         const query = getQuery();
         document.getElementById("status").hidden = false;
+        document.getElementById("downloadButton").hidden = true;
         request.get(query.url, (err, result) => {
             if(err) {
                 document.getElementById("status").innerText = err;
@@ -25,7 +26,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
         });
-    });
+    }
+
+    document.getElementById("downloadButton").addEventListener("click", downloadEventListener, { once: true });
 
     function addTotalValue(result, network, currency) {
         const activity = result.body.list;
