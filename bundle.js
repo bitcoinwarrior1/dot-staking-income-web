@@ -40,7 +40,9 @@ document.addEventListener("DOMContentLoaded", () => {
             activity.push({ total_value_KSM : result.body.total_value_KSM });
         }
 
-        return activity;
+        return activity.filter((e) => {
+            return e != null;
+        });
     }
 
     function getQuery() {
