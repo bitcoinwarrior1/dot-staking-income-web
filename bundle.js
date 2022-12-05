@@ -7,6 +7,8 @@ const url = "https://dot-staking-income.herokuapp.com/history";
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    document.getElementById("end").valueAsDate = new Date();
+
     function downloadEventListener() {
         const query = getQuery();
         document.getElementById("status").hidden = false;
@@ -50,19 +52,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const isKSM = document.getElementById("KSM").checked;
         const currencyElement = document.getElementById("currency");
         const currency = currencyElement.options[currencyElement.selectedIndex].text.toLowerCase();
+        const start = new Date(document.getElementById("start").value).getTime() / 1000;
+        const end = new Date(document.getElementById("end").value).getTime() / 1000;
         if(isKSM) {
            return {
                network: "KSM",
                address: userAddress,
                currency: currency,
-               url: `${url}/${userAddress}/KSM/${currency}`
+               url: `${url}/${userAddress}/KSM/${currency}/${start}/${end}`
            }
         } else {
             return {
                 network: "DOT",
                 address: userAddress,
                 currency: currency,
-                url: `${url}/${userAddress}/DOT/${currency}`
+                url: `${url}/${userAddress}/DOT/${currency}/${start}/${end}`
             }
         }
     }

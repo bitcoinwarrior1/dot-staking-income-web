@@ -45,6 +45,15 @@
             <option value="cad">CAD</option>
             <option value="nzd">NZD</option>
         </select>
+        <p>Dates</p>
+        <label for="start">Start:</label>
+        <input type="date" id="start" name="start"
+               value="2019-03-08"
+               min="2019-03-08">
+        <label for="end">End:</label>
+        <input type="date" id="end" name="end"
+               value="2099-01-01"
+               min="2018-01-01">
     </div>
     <h2 id="status" hidden>Loading, please wait...</h2>
     <button id="downloadButton" type="button">Download CSV</button>
